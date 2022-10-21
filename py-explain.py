@@ -17,15 +17,36 @@ def read_file(filepath):
 
 
 def import_statement(line_split):
-    if line_split[0] == "import":
-        message = f"Imports the \"{line_split[1]}\" module"
-        if "as" in line_split:
-            alias = line_split[line_split.index("as") + 1]
-            message = message + f", and gives it the alias \"{alias}\""
-        message = message + "."
-        return message
-    elif line_split[0] == "from":
-        return f"Imports the \"{line_split[3]}\" section from the \"{line_split[1]}\" module."
+    message = str()
+    subsection_message = str()
+
+    if "from" in line_split:
+        if "." in line_split[line_split.index("from") + 1]:
+            subsection_name = line_split[line_split.index("from") + 1].split(".")[1]
+            module_name = line_split[line_split.index("from") + 1].split(".")[0]
+            subsection_message = f" (specifically the \"{subsection_name}\" section)"
+
+            message = f"Imports the \"{line_split[3]}\" method from the \"{module_name}\" module"
+            message = message + subsection_message
+        else:
+            message = f"Imports the \"{line_split[3]}\" method from the \"{line_split[1]}\" module"
+    else:
+        if "." in line_split[1]:
+            subsection_name = line_split[1].split(".")[1]
+            module_name = line_split[1].split(".")[0]
+            subsection_message = f" (specifically the \"{subsection_name}\" section)"
+
+            message = f"Imports the \"{module_name}\" module"
+            message = message + subsection_message
+        else:
+            message = f"Imports the \"{line_split[1]}\" module"
+
+    if "as" in line_split:
+        alias = line_split[line_split.index("as") + 1]
+        message = message + f", and gives it the alias \"{alias}\""
+    message = message + "."
+
+    return message
 
 
 method_dict = {
@@ -53,4 +74,4 @@ def parse_instructions(fileLines, include_whitespace=False):
 
 
 read_file("dummy-files/dummy1.py")
-parse_instructions(fileLines, include_whitespace=True)
+parse_instructions(fileLines, include_whitespace=False)
