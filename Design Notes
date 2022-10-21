@@ -1,0 +1,36 @@
+March through the file, top to bottom. Analyze:
+    import statements
+    class definitions
+    function definitions
+    variable declarations
+    function calls
+    expressions + statements
+
+In order of ease of implementation:
+    1. import statements
+    2. expressions + statements
+    3. variable declarations
+    4. function calls
+    5. function definitions
+    6. class definitions
+
+Import statements are easy. They begin with either a "from" or "import", and then list the module name and the specifics
+on what is imported from it.
+
+###EX1###
+Import Statements
+
+import os
+
+->
+
+Import the "os" module.
+
+##EX2###
+Import Statements
+
+from os import system
+
+->
+
+Import the "system" method from the "os" module.
