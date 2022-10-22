@@ -1,3 +1,6 @@
+O. --- py-explain Structure ---
+
+
 March through the file, top to bottom. Analyze:
     import statements (Done)
     class definitions
@@ -13,6 +16,10 @@ In order of ease of implementation:
     4. function calls
     5. function definitions
     6. class definitions
+
+
+
+I. --- Import Statements ---
 
 Import statements are easy. They begin with either a "from" or "import", and then list the module name and the specifics
 on what is imported from it.
@@ -34,3 +41,44 @@ from os import system
 ->
 
 Import the "system" method from the "os" module.
+
+
+
+II. --- Declarations ---
+
+What happens when a variable declaration is made? There are so many possibilities for it to be set equal to a:
+    Literal (Number, String, a.k.a. all primitive data types)
+    Function (as a first-class)
+    Class object
+    Python Data Structure (list, tuple, dictionary)
+    Resolved function call (function's return value)
+
+And how do we make the distinction in our explanations? Literals would be the easiest to explain. This first requires we
+come up with a way for defining a literal and making sure it's different from anything else.
+
+We also might potentially have to do a ton of recursive tracing. For example:
+
+str_one = "One"
+
+str_two = str_one
+
+str_three = str_two
+
+...
+
+str_n = str_n-1
+
+What do we do here?
+    Perhaps when going downwards in the control flow, we can build a structure "lookup" of all of these references, and
+    check for them.
+
+    1:  'str_one = "One"' -> add str_one and its value to lookup. First, we verify that the right-hand declarator is of
+        type Literal. It is, so we don't have to look anything up.
+        |   {"str_one": "One"}
+    2:  'str_two = str_one' -> We don't recognize str_one as a literal, so we check the lookup table for it, and add
+        what we find there to the lookup table. Do we store it as a reference or just its value?
+            -> I think we'll store it as a reference, and the message will explain the trace back.
+        |   {"str_one": "One", "str_two": lookup[str_one]}
+            -> To handle the trace, the parser will ask: is lookup[str_two] pointing to a literal, or an entry in a
+            dict? If it's a pointer, then we'll explain the trace.
+    3: And so on and so on...
